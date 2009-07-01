@@ -1,3 +1,6 @@
 syntax: glob
 
 data
+fmap*pkl*
+*.pyc
+*.sw?
