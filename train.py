@@ -1,8 +1,4 @@
 #!/usr/bin/python
-#
-#  This training procedure is relatively well tested, and scales quickly.
-#
-#
 
 # TODO:
 #   SPARSE
@@ -18,13 +14,13 @@ HID = 5
 # Learning rate
 LR = 0.1
 
-EPOCHS = 500
+EPOCHS = 50
 
 import theano.compile
-COMPILE_MODE = theano.compile.Mode('c|py', 'fast_run')
-#COMPILE_MODE = theano.compile.profilemode.ProfileMode(
-#    theano.compile.mode.predefined_linkers['c|py'],
-#    theano.compile.mode.predefined_optimizers['fast_run'])
+#COMPILE_MODE = theano.compile.Mode('c|py', 'fast_run')
+COMPILE_MODE = theano.compile.profilemode.ProfileMode(
+    theano.compile.mode.predefined_linkers['c|py'],
+    theano.compile.mode.predefined_optimizers['fast_run'])
 #COMPILE_MODE = theano.compile.Mode('py', None)
 #COMPILE_MODE = theano.compile.debugmode.DebugMode()
 
@@ -73,7 +69,7 @@ xinstances = MTYPE(xinstances)
 targets = N.array(yvals)
 targ1 = targets[0,:]
 
-xR = TT.dvector('x')
+xR = TMTYPE('x')
 #print targ1.shape
 targR = TT.dvector("targ")
 #print xR, targR
@@ -98,7 +94,7 @@ import pylearn.algorithms.cost as cost
 from theano.compile.function_module import function
 
 #xw1R = theano.dot(w1R.T, xR.T).T
-xw1R = TT.dot(xR, w1R).T
+xw1R = TS.structured_dot(w1R.T, xR.T).T
 #print w1R.type
 #print xR.type
 
@@ -116,33 +112,33 @@ for epoch in range(EPOCHS):
     print "Epoch #", epoch
     for j in range(nex):
         #print "Example #", j
-        x = xinstances[j,:].data
-        idx = xinstances[j,:].indices
-#        print "x", x
-#        print "indices", idx
-#        print "w1[indicies]", w1[idx]
+        x = xinstances[j,:]
 #        #print "x", x.todense()
 #        #print x.indices
         targety = targets[j,:]
-#        print "target y", targety
-        o = trainfn(x, targety, w1[idx], b1, w2, b2)
+        #print "target y", targety
+        o = trainfn(x, targety, w1, b1, w2, b2)
 #        for r in o:
-#           #print r, r.shape, r.dtype
+           #print r, r.shape, r.dtype
         (predictedy, loss, gw1, gb1, gw2, gb2, h) = o
-#        print "h", h
-#        print "predicted y", predictedy
-#        print "loss", loss
+        #print "h", h
+        #print "predicted y", predictedy
+        #print "loss", loss
         #print gw1.shape, type(gw1), gw1.dtype
-        w1[idx] -= gw1 * LR
+        # Only sum the gradient along the non-zeroes.
+        # How do we implement this as C code?
+        for idx in x.indices:
+            w1[idx,:] -= gw1[idx,:] * LR
+#        w1 -= gw1 * LR
         w2 -= gw2 * LR
         b1 -= gb1 * LR
         b2 -= gb2 * LR
 
-print "w1", w1
-print "b1", b1
-print "w2", w2
-print "b2", b2
+#print "w1", w1
+#print "b1", b1
+#print "w2", w2
+#print "b2", b2
 
-#COMPILE_MODE.print_summary()
+COMPILE_MODE.print_summary()
 
 
