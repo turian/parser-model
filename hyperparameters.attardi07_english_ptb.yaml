@@ -1,12 +1,13 @@
 original examples file: data/english_ptb_train.feats
 train examples file: data/english_ptb_train.train.feats
-#validation examples file: data/english_ptb_train.validation.feats
-validation examples file: data/english_ptb_train.validation.shuffled.50.feats
+validation examples file: data/english_ptb_train.validation.feats
+#validation examples file: data/english_ptb_train.validation.shuffled.50.feats
 
 hidden dimensions: 100
 learning rate: 0.1
 
-examples per validation: 100
+examples per validation: 100000
+minimum training updates: 2500000
 
 # How many examples are put in validation?
 validation example likelihood: 0.01

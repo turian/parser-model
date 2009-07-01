@@ -31,6 +31,7 @@ b2 = N.zeros(ODIM)
 import graph
 
 best_validation_accuracy = 0.
+best_validation_at = 0
 def validate():
     acc = []
     for (x, y) in examples.get_validation_example():
@@ -41,7 +42,7 @@ def validate():
 
 def state_save():
     cPickle.dump((w1, b1, w2, b2), myopen(join(rundir, "best-model.pkl"), "w"), protocol=-1)
-    myopen(join(rundir, "best-model-validation-accuracy.txt"), "w").write("%.2f%%" % (best_validation_accuracy*100))
+    myopen(join(rundir, "best-model-validation.txt"), "w").write("Accuracy %.2f%% after %d updates" % (best_validation_accuracy*100, best_validation_at))
 
 mvgavg_accuracy = 0.
 mvgavg_variance = 0.
@@ -79,11 +80,16 @@ for (x, y) in examples.get_training_example():
 
     if cnt % HYPERPARAMETERS["examples per validation"] == 0:
         valacc, valstd = validate()
-        sys.stderr.write("After %d training examples, validation accuracy: %.2f%%, stddev: %.2f%%\n" % (cnt, valacc*100, valstd*100))
+        sys.stderr.write("After %d training examples, validation accuracy: %.2f%%, stddev: %.2f%% (former best=%.2f%% at %d)\n" % (cnt, valacc*100, valstd*100, best_validation_accuracy*100, best_validation_at))
         if best_validation_accuracy < valacc:
             best_validation_accuracy = valacc
+            best_validation_at = cnt
             sys.stderr.write("NEW BEST VALIDATION ACCURACY. Saving state.\n")
             state_save()
+        elif cnt > 2*best_validation_at and cnt >= HYPERPARAMETERS["minimum training updates"]:
+            sys.stderr.write("Have not beaten best validation accuracy for a while. Terminating training...\n")
+            sys.stderr.write(stats() + "\n")
+            break
     if cnt % 1000 == 0:
         sys.stderr.write("After %d training examples, training accuracy (moving average): %.2f%%, stddev: %.2f%%\n" % (cnt, 100. * mvgavg_accuracy, 100. * math.sqrt(mvgavg_variance)))
         sys.stderr.write(stats() + "\n")
