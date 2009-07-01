@@ -5,6 +5,7 @@ Read the training examples.
 import string
 import common.file
 import common.hyperparameters
+import common.scipysparse as sparse
 import common.featuremap
 labelmap = common.featuremap.get(name="labels")
 featuremap = common.featuremap.get(name="features")
@@ -22,7 +23,11 @@ def get_example():
             if len(i) == 0: continue
             l = i[0]
             feats = i[1:]
-            x = frozenset([featuremap.id(f) for f in feats])
+            x = sparse.lil_matrix((1, featuremap.len))
+            for f in feats:
+                x[0, featuremap.id(f)] = 1.
+            x = sparse.csr_matrix(x)
+
             y = labelmap.id(l)
             yield x, y
 
