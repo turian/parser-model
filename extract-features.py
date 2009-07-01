@@ -14,7 +14,7 @@ featuremap = common.featuremap.get(name="features")
 
 #from collection import defaultdict
 #cnt = defaultdict(int)
-for l in myopen(HYPERPARAMETERS["examples file"]):
+for l in myopen(HYPERPARAMETERS["original examples file"]):
     i = string.split(l)
     if len(i) == 0: continue
     l = i[0]

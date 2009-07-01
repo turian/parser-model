@@ -58,6 +58,8 @@ for (x, y) in examples.get_example():
 ##    print "new KL=%.3f, softmax=%s, argmax=%d" % (kl, softmax, argmax)
 #    print "new KL=%.3f, argmax=%d" % (kl, argmax)
 
-    if cnt % 100 == 0:
+    if cnt % 1000 == 0:
         sys.stderr.write("After %d training examples, accuracy (moving average): %.2f%%, stddev: %.2f%%\n" % (cnt, 100. * mvgavg_accuracy, 100. * math.sqrt(mvgavg_variance)))
         sys.stderr.write(stats() + "\n")
+
+#graph.COMPILE_MODE.print_summary()

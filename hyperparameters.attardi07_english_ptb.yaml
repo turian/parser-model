@@ -1,4 +1,11 @@
-examples file: data/english_ptb_train.feats
+original examples file: data/english_ptb_train.feats
+train examples file: data/english_ptb_train.train.feats
+validation examples file: data/english_ptb_train.validation.feats
 
 hidden dimensions: 100
 learning rate: 0.1
+
+# How many examples are put in validation?
+validation example likelihood: 0.01
+
+random seed: 0
