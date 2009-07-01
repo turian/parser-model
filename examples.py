@@ -7,10 +7,7 @@ import common.file
 import common.hyperparameters
 import common.scipysparse as sparse
 import common.featuremap
-labelmap = common.featuremap.get(name="labels")
-featuremap = common.featuremap.get(name="features")
-labelmap.readonly = True
-featuremap.readonly = True
+from vocabulary import *
 
 def get_example():
     """

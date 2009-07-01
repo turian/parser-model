@@ -1,1 +1,3 @@
 examples file: data/english_ptb_train.feats
+
+hidden dimensions: 100
