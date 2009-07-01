@@ -21,40 +21,58 @@ IDIM = featuremap.len
 ODIM = labelmap.len
 HID = HYPERPARAMETERS["hidden dimensions"]
 LR = HYPERPARAMETERS["learning rate"]
+HLAYERS = HYPERPARAMETERS["hidden layers"]
 
 from pylearn.algorithms.weights import random_weights
 w1 = random_weights(IDIM, HID)
 b1 = N.zeros(HID)
+if HLAYERS == 2:
+    wh = random_weights(HID, HID)
+    bh = N.zeros(HID)
 w2 = random_weights(HID, ODIM)
 b2 = N.zeros(ODIM)
 
 import graph
+
+def abs_prehidden(prehidden, str="Prehidden"):
+    abs_prehidden = N.abs(prehidden)
+    med = N.median(abs_prehidden)
+    abs_prehidden = abs_prehidden.tolist()
+    assert len(abs_prehidden) == 1
+    abs_prehidden = abs_prehidden[0]
+    abs_prehidden.sort()
+    abs_prehidden.reverse()
+    print >> sys.stderr, cnt, "Abs%s median =" % str, med, "max =", abs_prehidden[:5]
 
 best_validation_accuracy = 0.
 best_validation_at = 0
 def validate():
     acc = []
     for (i, (x, y)) in enumerate(examples.get_validation_example()):
-        o = graph.validatefn(x, N.array([y]), w1, b1, w2, b2)
-        (kl, softmax, argmax, presquashh) = o
+        if HLAYERS == 2:
+            o = graph.validatefn(x, N.array([y]), w1, b1, wh, bh, w2, b2)
+            (kl, softmax, argmax, prehidden1, prehidden2) = o
+        else:
+            o = graph.validatefn(x, N.array([y]), w1, b1, w2, b2)
+            (kl, softmax, argmax, prehidden) = o
 
         if argmax == y: acc.append(1.)
         else: acc.append(0.)
 
         if i < 5:
-            abs_prehidden = N.abs(presquashh)
-            med = N.median(abs_prehidden)
-            abs_prehidden = abs_prehidden.tolist()
-            assert len(abs_prehidden) == 1
-            abs_prehidden = abs_prehidden[0]
-            abs_prehidden.sort()
-            abs_prehidden.reverse()
-            print >> sys.stderr, cnt, "AbsPrehidden median =", med, "max =", abs_prehidden[:5]
+            if HLAYERS == 2:
+                abs_prehidden(prehidden1, "Prehidden1")
+                abs_prehidden(prehidden2, "Prehidden2")
+            else:
+                abs_prehidden(prehidden)       
 
     return N.mean(acc), N.std(acc)
 
 def state_save():
-    cPickle.dump((w1, b1, w2, b2), myopen(join(rundir, "best-model.pkl"), "w"), protocol=-1)
+    if HLAYERS == 2:
+        cPickle.dump((w1, b1, wh, bh, w2, b2), myopen(join(rundir, "best-model.pkl"), "w"), protocol=-1)
+    else:
+        cPickle.dump((w1, b1, w2, b2), myopen(join(rundir, "best-model.pkl"), "w"), protocol=-1)
     myopen(join(rundir, "best-model-validation.txt"), "w").write("Accuracy %.2f%% after %d updates" % (best_validation_accuracy*100, best_validation_at))
 
 mvgavg_accuracy = 0.
@@ -64,8 +82,12 @@ for (x, y) in examples.get_training_example():
     cnt += 1
 #    print x, y
 #    print "Target y =", y
-    o = graph.trainfn(x, N.array([y]), w1, b1, w2, b2)
-    (kl, softmax, argmax, presquashh, gw1, gb1, gw2, gb2) = o
+    if HLAYERS == 2:
+        o = graph.trainfn(x, N.array([y]), w1, b1, wh, bh, w2, b2)
+        (kl, softmax, argmax, prehidden1, prehidden2, gw1, gb1, gwh, gbh, gw2, gb2) = o
+    else:
+        o = graph.trainfn(x, N.array([y]), w1, b1, w2, b2)
+        (kl, softmax, argmax, prehidden, gw1, gb1, gw2, gb2) = o
 #    print "old KL=%.3f, softmax=%s, argmax=%d" % (kl, softmax, argmax)
 #    print "old KL=%.3f, argmax=%d" % (kl, argmax)
 
@@ -82,8 +104,11 @@ for (x, y) in examples.get_training_example():
     for idx in x.indices:
         w1[idx,:] -= gw1[idx,:] * LR
 #     w1 -= gw1 * LR
-    w2 -= gw2 * LR
     b1 -= gb1 * LR
+    if HLAYERS == 2:
+        wh -= gwh * LR
+        bh -= gbh * LR
+    w2 -= gw2 * LR
     b2 -= gb2 * LR
 
 #    o = graph.validatefn(x, N.array([y]), w1, b1, w2, b2)
