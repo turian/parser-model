@@ -4,3 +4,4 @@ data
 fmap*pkl*
 *.pyc
 *.sw?
+LOGS*

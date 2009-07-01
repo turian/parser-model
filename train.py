@@ -4,12 +4,18 @@ import common.hyperparameters, common.options
 HYPERPARAMETERS = common.hyperparameters.read("attardi07_english_ptb")
 common.options.reparse(HYPERPARAMETERS)
 
+import common.dump
+rundir = common.dump.create_canonical_directory(HYPERPARAMETERS)
+
 import examples
 from vocabulary import *
 from common.stats import stats
+from common.file import myopen
 import sys
 import numpy as N
 import math
+from os.path import join
+import cPickle
 
 IDIM = featuremap.len
 ODIM = labelmap.len
@@ -24,6 +30,7 @@ b2 = N.zeros(ODIM)
 
 import graph
 
+best_validation_accuracy = 0.
 def validate():
     acc = []
     for (x, y) in examples.get_validation_example():
@@ -31,6 +38,10 @@ def validate():
         if argmax == y: acc.append(1.)
         else: acc.append(0.)
     return N.mean(acc), N.std(acc)
+
+def state_save():
+    cPickle.dump((w1, b1, w2, b2), myopen(join(rundir, "best-model.pkl"), "w"), protocol=-1)
+    myopen(join(rundir, "best-model-validation-accuracy.txt"), "w").write("%.2f%%" % (best_validation_accuracy*100))
 
 mvgavg_accuracy = 0.
 mvgavg_variance = 0.
@@ -66,9 +77,13 @@ for (x, y) in examples.get_training_example():
 ##    print "new KL=%.3f, softmax=%s, argmax=%d" % (kl, softmax, argmax)
 #    print "new KL=%.3f, argmax=%d" % (kl, argmax)
 
-    if cnt % 10000 == 0:
+    if cnt % HYPERPARAMETERS["examples per validation"] == 0:
         valacc, valstd = validate()
         sys.stderr.write("After %d training examples, validation accuracy: %.2f%%, stddev: %.2f%%\n" % (cnt, valacc*100, valstd*100))
+        if best_validation_accuracy < valacc:
+            best_validation_accuracy = valacc
+            sys.stderr.write("NEW BEST VALIDATION ACCURACY. Saving state.\n")
+            state_save()
     if cnt % 1000 == 0:
         sys.stderr.write("After %d training examples, training accuracy (moving average): %.2f%%, stddev: %.2f%%\n" % (cnt, 100. * mvgavg_accuracy, 100. * math.sqrt(mvgavg_variance)))
         sys.stderr.write(stats() + "\n")
