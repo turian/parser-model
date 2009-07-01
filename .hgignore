@@ -2,6 +2,6 @@ syntax: glob
 
 data
 fmap*pkl*
+LOGS.*
 *.pyc
 *.sw?
-LOGS*

@@ -34,10 +34,23 @@ best_validation_accuracy = 0.
 best_validation_at = 0
 def validate():
     acc = []
-    for (x, y) in examples.get_validation_example():
+    for (i, (x, y)) in enumerate(examples.get_validation_example()):
         o = graph.validatefn(x, N.array([y]), w1, b1, w2, b2)
+        (kl, softmax, argmax, presquashh) = o
+
         if argmax == y: acc.append(1.)
         else: acc.append(0.)
+
+        if i < 5:
+            abs_prehidden = N.abs(presquashh)
+            med = N.median(abs_prehidden)
+            abs_prehidden = abs_prehidden.tolist()
+            assert len(abs_prehidden) == 1
+            abs_prehidden = abs_prehidden[0]
+            abs_prehidden.sort()
+            abs_prehidden.reverse()
+            print >> sys.stderr, cnt, "AbsPrehidden median =", med, "max =", abs_prehidden[:5]
+
     return N.mean(acc), N.std(acc)
 
 def state_save():
@@ -52,7 +65,7 @@ for (x, y) in examples.get_training_example():
 #    print x, y
 #    print "Target y =", y
     o = graph.trainfn(x, N.array([y]), w1, b1, w2, b2)
-    (kl, softmax, argmax, gw1, gb1, gw2, gb2) = o
+    (kl, softmax, argmax, presquashh, gw1, gb1, gw2, gb2) = o
 #    print "old KL=%.3f, softmax=%s, argmax=%d" % (kl, softmax, argmax)
 #    print "old KL=%.3f, argmax=%d" % (kl, argmax)
 
@@ -74,7 +87,7 @@ for (x, y) in examples.get_training_example():
     b2 -= gb2 * LR
 
 #    o = graph.validatefn(x, N.array([y]), w1, b1, w2, b2)
-#    (kl, softmax, argmax) = o
+#    (kl, softmax, argmax, presquashh) = o
 ##    print "new KL=%.3f, softmax=%s, argmax=%d" % (kl, softmax, argmax)
 #    print "new KL=%.3f, argmax=%d" % (kl, argmax)
 

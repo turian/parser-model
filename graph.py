@@ -48,6 +48,6 @@ hR = ACTIVATION_FUNCTION(xw1R + b1R)
 #zero = tensor.zeros_like(x[0,:])
 (kl, softmax, argmax) = crossentropy_softmax_argmax_1hot_with_bias(theano.dot(hR, w2R), b2R, targetyR)
 
-validatefn = function([xR, targetyR, w1R, b1R, w2R, b2R], [kl, softmax, argmax], mode=COMPILE_MODE)
+validatefn = function([xR, targetyR, w1R, b1R, w2R, b2R], [kl, softmax, argmax, xw1R], mode=COMPILE_MODE)
 (gw1, gb1, gw2, gb2) = TT.grad(kl, [w1R, b1R, w2R, b2R])
-trainfn = function([xR, targetyR, w1R, b1R, w2R, b2R], [kl, softmax, argmax, theano.compile.io.Out(gw1, borrow = True), gb1, gw2, gb2], mode=COMPILE_MODE)
+trainfn = function([xR, targetyR, w1R, b1R, w2R, b2R], [kl, softmax, argmax, xw1R, theano.compile.io.Out(gw1, borrow = True), gb1, gw2, gb2], mode=COMPILE_MODE)
