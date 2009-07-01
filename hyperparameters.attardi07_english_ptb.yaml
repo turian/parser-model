@@ -1,3 +1,4 @@
 examples file: data/english_ptb_train.feats
 
 hidden dimensions: 100
+learning rate: 0.1

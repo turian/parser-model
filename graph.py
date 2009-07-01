@@ -1,9 +1,9 @@
 import theano.compile
-#COMPILE_MODE = theano.compile.Mode('c|py', 'fast_run')
+COMPILE_MODE = theano.compile.Mode('c|py', 'fast_run')
 #COMPILE_MODE = theano.compile.profilemode.ProfileMode(
 #    theano.compile.mode.predefined_linkers['c|py'],
 #    theano.compile.mode.predefined_optimizers['fast_run'])
-COMPILE_MODE = theano.compile.Mode('py', None)
+#COMPILE_MODE = theano.compile.Mode('py', None)
 #COMPILE_MODE = theano.compile.debugmode.DebugMode()
 
 import theano
@@ -49,6 +49,5 @@ hR = ACTIVATION_FUNCTION(xw1R + b1R)
 (kl, softmax, argmax) = crossentropy_softmax_argmax_1hot_with_bias(theano.dot(hR, w2R), b2R, targetyR)
 
 validatefn = function([xR, targetyR, w1R, b1R, w2R, b2R], [kl, softmax, argmax], mode=COMPILE_MODE)
-#(gw1, gb1, gw2, gb2) = TT.grad(loss, [w1R, b1R, w2R, b2R])
-#trainfn = function([xR, targR, w1R, b1R, w2R, b2R], [yR, loss, theano.compile.io.Out(gw1, borrow = True), gb1, gw2, gb2, hR], mode=COMPILE_MODE)
-#print type(hR), type(yR)
+(gw1, gb1, gw2, gb2) = TT.grad(kl, [w1R, b1R, w2R, b2R])
+trainfn = function([xR, targetyR, w1R, b1R, w2R, b2R], [kl, softmax, argmax, theano.compile.io.Out(gw1, borrow = True), gb1, gw2, gb2], mode=COMPILE_MODE)
