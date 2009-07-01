@@ -24,10 +24,18 @@ b2 = N.zeros(ODIM)
 
 import graph
 
+def validate():
+    acc = []
+    for (x, y) in examples.get_validation_example():
+        o = graph.validatefn(x, N.array([y]), w1, b1, w2, b2)
+        if argmax == y: acc.append(1.)
+        else: acc.append(0.)
+    return N.mean(acc), N.std(acc)
+
 mvgavg_accuracy = 0.
 mvgavg_variance = 0.
 cnt = 0
-for (x, y) in examples.get_example():
+for (x, y) in examples.get_training_example():
     cnt += 1
 #    print x, y
 #    print "Target y =", y
@@ -58,8 +66,11 @@ for (x, y) in examples.get_example():
 ##    print "new KL=%.3f, softmax=%s, argmax=%d" % (kl, softmax, argmax)
 #    print "new KL=%.3f, argmax=%d" % (kl, argmax)
 
+    if cnt % 10000 == 0:
+        valacc, valstd = validate()
+        sys.stderr.write("After %d training examples, validation accuracy: %.2f%%, stddev: %.2f%%\n" % (cnt, valacc*100, valstd*100))
     if cnt % 1000 == 0:
-        sys.stderr.write("After %d training examples, accuracy (moving average): %.2f%%, stddev: %.2f%%\n" % (cnt, 100. * mvgavg_accuracy, 100. * math.sqrt(mvgavg_variance)))
+        sys.stderr.write("After %d training examples, training accuracy (moving average): %.2f%%, stddev: %.2f%%\n" % (cnt, 100. * mvgavg_accuracy, 100. * math.sqrt(mvgavg_variance)))
         sys.stderr.write(stats() + "\n")
 
 #graph.COMPILE_MODE.print_summary()
