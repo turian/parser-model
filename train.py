@@ -16,6 +16,10 @@ import numpy as N
 import math
 from os.path import join
 import cPickle
+import random
+
+random.seed(HYPERPARAMETERS["random seed"])
+N.random.seed(HYPERPARAMETERS["random seed"])
 
 IDIM = featuremap.len
 ODIM = labelmap.len
