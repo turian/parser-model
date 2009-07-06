@@ -9,9 +9,9 @@ learning rate: 0.1
 examples per validation: 100000
 minimum training updates: 2500000
 
-validation examples file: data/english_ptb_train.validation.shuffled.50.feats
-examples per validation: 1000
-minimum training updates: 2500
+#validation examples file: data/english_ptb_train.validation.shuffled.50.feats
+#examples per validation: 1000
+#minimum training updates: 2500
 
 # How many examples are put in validation?
 validation example likelihood: 0.01

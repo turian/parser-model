@@ -14,8 +14,6 @@ from common.file import myopen
 import sys
 import numpy as N
 import math
-from os.path import join
-import cPickle
 import random
 
 random.seed(HYPERPARAMETERS["random seed"])
@@ -71,13 +69,6 @@ def validate():
                 abs_prehidden(prehidden)       
 
     return N.mean(acc), N.std(acc)
-
-def state_save():
-    if HLAYERS == 2:
-        cPickle.dump((w1, b1, wh, bh, w2, b2), myopen(join(rundir, "best-model.pkl"), "w"), protocol=-1)
-    else:
-        cPickle.dump((w1, b1, w2, b2), myopen(join(rundir, "best-model.pkl"), "w"), protocol=-1)
-    myopen(join(rundir, "best-model-validation.txt"), "w").write("Accuracy %.2f%% after %d updates" % (best_validation_accuracy*100, best_validation_at))
 
 mvgavg_accuracy = 0.
 mvgavg_variance = 0.
