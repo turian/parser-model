@@ -79,7 +79,7 @@ for (x, y) in examples.get_training_example():
 #    print "Target y =", y
 
     if HYPERPARAMETERS["locally normalize"]:
-        N.array([y])
+        targety = N.array([y])
     else:
         targety = N.zeros(ODIM)
         targety[y] = 1.
