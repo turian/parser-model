@@ -8,13 +8,15 @@ from common.stats import stats
 def _filename(rundir):
     return join(rundir, "best-model.pkl")
 
-def save():
+def save(params, rundir, best_validation_accuracy, best_validation_at):
     import common.hyperparameters
     HYPERPARAMETERS = common.hyperparameters.read("attardi07_english_ptb")
     HLAYERS = HYPERPARAMETERS["hidden layers"]
     if HLAYERS == 2:
+        (w1, b1, wh, bh, w2, b2) = params
         cPickle.dump((w1, b1, wh, bh, w2, b2), myopen(_filename(rundir), "w"), protocol=-1)
     else:
+        (w1, b1, w2, b2) = params
         cPickle.dump((w1, b1, w2, b2), myopen(_filename(rundir), "w"), protocol=-1)
     myopen(join(rundir, "best-model-validation.txt"), "w").write("Accuracy %.2f%% after %d updates" % (best_validation_accuracy*100, best_validation_at))
 

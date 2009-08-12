@@ -16,6 +16,9 @@ import numpy as N
 import math
 import random
 
+#from common import movingaverage
+import movingaverage
+
 random.seed(HYPERPARAMETERS["random seed"])
 N.random.seed(HYPERPARAMETERS["random seed"])
 
@@ -35,6 +38,7 @@ w2 = random_weights(HID, ODIM)
 b2 = N.zeros(ODIM)
 
 import graph
+import state
 
 def abs_prehidden(prehidden, str="Prehidden"):
     abs_prehidden = N.abs(prehidden)
@@ -51,11 +55,16 @@ best_validation_at = 0
 def validate():
     acc = []
     for (i, (x, y)) in enumerate(examples.get_validation_example()):
+        if HYPERPARAMETERS["locally normalize"]:
+            targety = N.array([y])
+        else:
+            targety = N.zeros(ODIM)
+            targety[y] = 1.
         if HLAYERS == 2:
-            o = graph.validatefn([x.data], N.array([y]), w1[x.indices], b1, wh, bh, w2, b2)
+            o = graph.validatefn([x.data], targety, w1[x.indices], b1, wh, bh, w2, b2)
             (kl, softmax, argmax, prehidden1, prehidden2) = o
         else:
-            o = graph.validatefn([x.data], N.array([y]), w1[x.indices], b1, w2, b2)
+            o = graph.validatefn([x.data], targety, w1[x.indices], b1, w2, b2)
             (kl, softmax, argmax, prehidden) = o
 
         if argmax == y: acc.append(1.)
@@ -70,9 +79,13 @@ def validate():
 
     return N.mean(acc), N.std(acc)
 
-mvgavg_accuracy = 0.
-mvgavg_variance = 0.
+mvgavg_accuracy = movingaverage.MovingAverage()
+mvgavg_loss = movingaverage.MovingAverage()
 cnt = 0
+#if HLAYERS == 2:
+#    state.save((w1, b1, wh, bh, w2, b2), rundir, best_validation_accuracy, best_validation_at)
+#else:
+#    state.save((w1, b1, w2, b2), rundir, best_validation_accuracy, best_validation_at)
 for (x, y) in examples.get_training_example():
     cnt += 1
 #    print x, y
@@ -93,13 +106,10 @@ for (x, y) in examples.get_training_example():
 #    print "old KL=%.3f, softmax=%s, argmax=%d" % (kl, softmax, argmax)
 #    print "old KL=%.3f, argmax=%d" % (kl, argmax)
 
-    if argmax == y: this_accuracy = 1.
+    if argmax == y: this_accuracy = 100.
     else: this_accuracy = 0.
-    mvgavg_accuracy = mvgavg_accuracy - (2. / cnt) * (mvgavg_accuracy - this_accuracy)
-    # Should I compute mvgavg_variance before updating the mvgavg_accuracy?
-    this_variance = (this_accuracy - mvgavg_accuracy) * (this_accuracy - mvgavg_accuracy)
-    mvgavg_variance = mvgavg_variance - (2. / cnt) * (mvgavg_variance - this_variance)
-#    print "Accuracy (moving average): %.2f%%, stddev: %.2f%%" % (100. * mvgavg_accuracy, 100. * math.sqrt(mvgavg_variance))
+    mvgavg_accuracy.add(this_accuracy)
+    mvgavg_loss.add(kl)
 
     # Only sum the gradient along the non-zeroes.
     # How do we implement this as C code?
@@ -126,13 +136,17 @@ for (x, y) in examples.get_training_example():
             best_validation_accuracy = valacc
             best_validation_at = cnt
             sys.stderr.write("NEW BEST VALIDATION ACCURACY. Saving state.\n")
-            state_save()
+            if HLAYERS == 2:
+                state.save((w1, b1, wh, bh, w2, b2), rundir, best_validation_accuracy, best_validation_at)
+            else:
+                state.save((w1, b1, w2, b2), rundir, best_validation_accuracy, best_validation_at)
         elif cnt > 2*best_validation_at and cnt >= HYPERPARAMETERS["minimum training updates"]:
             sys.stderr.write("Have not beaten best validation accuracy for a while. Terminating training...\n")
             sys.stderr.write(stats() + "\n")
             break
     if cnt % 1000 == 0:
-        sys.stderr.write("After %d training examples, training accuracy (moving average): %.2f%%, stddev: %.2f%%\n" % (cnt, 100. * mvgavg_accuracy, 100. * math.sqrt(mvgavg_variance)))
+        sys.stderr.write("After %d training examples, training accuracy %s\n" % (cnt, mvgavg_accuracy))
+        sys.stderr.write("After %d training examples, training loss %s\n" % (cnt, mvgavg_loss))
         sys.stderr.write(stats() + "\n")
 
 #graph.COMPILE_MODE.print_summary()
