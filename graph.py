@@ -55,7 +55,14 @@ if HLAYERS == 2:
     h = ACTIVATION_FUNCTION(xwh + bh)
 
 #zero = tensor.zeros_like(x[0,:])
-(kl, softmax, argmax) = crossentropy_softmax_argmax_1hot_with_bias(theano.dot(h, w2), b2, targety)
+
+if HYPERPARAMETERS["locally normalize"]:
+    (kl, softmax, argmax) = crossentropy_softmax_argmax_1hot_with_bias(theano.dot(h, w2), b2, targety)
+else:
+    prey = theano.dot(h, w2) + b2
+    softmax = nnet.sigmoid(prey)
+    kl = -TT.mean(TT.sum(targety * TT.log(softmax) + (1 - targety) * TT.log(1 - softmax), axis=1), axis=0)
+    argmax = TT.argmax(softmax)
 
 if HLAYERS == 2:
     validatefn = function([x, targety, w1, b1, wh, bh, w2, b2], [kl, softmax, argmax, xw1, xwh], mode=COMPILE_MODE)

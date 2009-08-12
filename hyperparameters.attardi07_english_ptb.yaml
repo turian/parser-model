@@ -9,6 +9,8 @@ learning rate: 0.1
 examples per validation: 100000
 minimum training updates: 2500000
 
+locally normalize: True
+
 #validation examples file: data/english_ptb_train.validation.shuffled.50.feats
 #examples per validation: 1000
 #minimum training updates: 2500

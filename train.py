@@ -77,11 +77,18 @@ for (x, y) in examples.get_training_example():
     cnt += 1
 #    print x, y
 #    print "Target y =", y
+
+    if HYPERPARAMETERS["locally normalize"]:
+        N.array([y])
+    else:
+        targety = N.zeros(ODIM)
+        targety[y] = 1.
+
     if HLAYERS == 2:
-        o = graph.trainfn([x.data], N.array([y]), w1[x.indices], b1, wh, bh, w2, b2)
+        o = graph.trainfn([x.data], targety, w1[x.indices], b1, wh, bh, w2, b2)
         (kl, softmax, argmax, prehidden1, prehidden2, gw1, gb1, gwh, gbh, gw2, gb2) = o
     else:
-        o = graph.trainfn([x.data], N.array([y]), w1[x.indices], b1, w2, b2)
+        o = graph.trainfn([x.data], targety, w1[x.indices], b1, w2, b2)
         (kl, softmax, argmax, prehidden, gw1, gb1, gw2, gb2) = o
 #    print "old KL=%.3f, softmax=%s, argmax=%d" % (kl, softmax, argmax)
 #    print "old KL=%.3f, argmax=%d" % (kl, argmax)
