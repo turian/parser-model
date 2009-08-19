@@ -109,26 +109,30 @@ for (x, y) in examples.get_training_example():
     if argmax == y: this_accuracy = 100.
     else: this_accuracy = 0.
     mvgavg_accuracy.add(this_accuracy)
-    mvgavg_loss.add(kl)
 
-    # Only sum the gradient along the non-zeroes.
-    # How do we implement this as C code?
-#    for idx in x.indices:
-#        w1[idx,:] -= gw1[idx,:] * LR
-    w1[x.indices] -= gw1 * LR
-#     w1 -= gw1 * LR
-    b1 -= gb1 * LR
-    if HLAYERS == 2:
-        wh -= gwh * LR
-        bh -= gbh * LR
-    w2 -= gw2 * LR
-    b2 -= gb2 * LR
-
-#    o = graph.validatefn(x, N.array([y]), w1, b1, w2, b2)
-#    (kl, softmax, argmax, presquashh) = o
-##    print "new KL=%.3f, softmax=%s, argmax=%d" % (kl, softmax, argmax)
-#    print "new KL=%.3f, argmax=%d" % (kl, argmax)
-
+    if math.isnan(kl):
+        print >> sys.stderr, "Got a NaN loss"
+    else:
+        mvgavg_loss.add(kl)
+    
+        # Only sum the gradient along the non-zeroes.
+        # How do we implement this as C code?
+    #    for idx in x.indices:
+    #        w1[idx,:] -= gw1[idx,:] * LR
+        w1[x.indices] -= gw1 * LR
+    #     w1 -= gw1 * LR
+        b1 -= gb1 * LR
+        if HLAYERS == 2:
+            wh -= gwh * LR
+            bh -= gbh * LR
+        w2 -= gw2 * LR
+        b2 -= gb2 * LR
+    
+    #    o = graph.validatefn(x, N.array([y]), w1, b1, w2, b2)
+    #    (kl, softmax, argmax, presquashh) = o
+    ##    print "new KL=%.3f, softmax=%s, argmax=%d" % (kl, softmax, argmax)
+    #    print "new KL=%.3f, argmax=%d" % (kl, argmax)
+    
     if cnt % HYPERPARAMETERS["examples per validation"] == 0:
         valacc, valstd = validate()
         sys.stderr.write("After %d training examples, validation accuracy: %.2f%%, stddev: %.2f%% (former best=%.2f%% at %d)\n" % (cnt, valacc*100, valstd*100, best_validation_accuracy*100, best_validation_at))
