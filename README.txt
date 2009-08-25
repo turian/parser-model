@@ -1,3 +1,18 @@
+Parser model
+
+    written by Joseph Turian
+
+A neural network with a sparse input.
+
+Designed to make decisions in Giuseppe Attardi's DESR parser, but usable in other
+history-based parsers.
+Little of this code is parser specific, it is mainly generic neural network
+code.
+
+
+This code relies upon Theano (http://pylearn.org/theano/)
+
+
 After editing the hyperparameters.*.yaml:
 
 ./extract-features.py

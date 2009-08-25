@@ -28,15 +28,21 @@ if __name__ == "__main__":
     import graph
     import numpy as N
     from vocabulary import labelmap
+    ODIM = labelmap.len
     from common.mydict import sort as dictsort
     for l in sys.stdin:
         e = examples._example_from_string(l)
         (x, y) = e
+        if HYPERPARAMETERS["locally normalize"]:
+            targety = N.array([y])
+        else:
+            targety = N.zeros(ODIM)
+            targety[y] = 1.
         if HLAYERS == 2:
-            o = graph.validatefn([x.data], N.array([y]), w1[x.indices], b1, wh, bh, w2, b2)
+            o = graph.validatefn([x.data], targety, w1[x.indices], b1, wh, bh, w2, b2)
             (kl, softmax, argmax, prehidden1, prehidden2) = o
         else:
-            o = graph.validatefn([x.data], N.array([y]), w1[x.indices], b1, w2, b2)
+            o = graph.validatefn([x.data], targety, w1[x.indices], b1, w2, b2)
             (kl, softmax, argmax, prehidden) = o
 
         assert softmax.shape[0] == 1

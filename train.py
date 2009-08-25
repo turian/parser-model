@@ -110,7 +110,7 @@ for (x, y) in examples.get_training_example():
     else: this_accuracy = 0.
     mvgavg_accuracy.add(this_accuracy)
 
-    if math.isnan(kl):
+    if N.isnan(kl).any():
         print >> sys.stderr, "Got a NaN loss"
     else:
         mvgavg_loss.add(kl)
