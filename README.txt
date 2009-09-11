@@ -2,7 +2,10 @@ Parser model
 
     written by Joseph Turian
 
-A neural network with a sparse input.
+    available from: http://github.com/turian/parser-model/tree/master
+
+A neural network with a sparse input, for predicting decisions of a natural
+language syntax parser.
 
 Designed to make decisions in Giuseppe Attardi's DESR parser, but usable in other
 history-based parsers.
