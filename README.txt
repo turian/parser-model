@@ -15,6 +15,8 @@ code.
 
 This code relies upon Theano (http://pylearn.org/theano/)
 
+You need a data/ directory containing data/english_ptb_train.train.feats and
+friends.
 
 After editing the hyperparameters.*.yaml:
 
