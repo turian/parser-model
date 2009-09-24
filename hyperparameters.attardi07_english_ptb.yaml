@@ -1,6 +1,6 @@
-original examples file: data/english_ptb_train.feats
-train examples file: data/english_ptb_train.train.feats
-validation examples file: data/english_ptb_train.validation.feats
+original examples file: ../data/20090923/english_ptb_train.feats
+train examples file: ../data/20090923/english_ptb_train.train.feats
+validation examples file: ../data/20090923/english_ptb_train.validation.feats
 
 hidden layers: 2
 hidden dimensions: 100

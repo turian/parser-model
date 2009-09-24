@@ -15,19 +15,24 @@ code.
 
 This code relies upon Theano (http://pylearn.org/theano/)
 
-You need a data/ directory containing data/english_ptb_train.train.feats and
-friends.
+==================================
+
+DATA PREPROCESSING
+
+You need a $DATA directory containing $DATA/english_ptb_train.feats
 
 After editing the hyperparameters.*.yaml:
 
+# Create files fmap.features.pkl.gz and fmap.labels.pkl.gz
 ./extract-features.py
 
+# Create files $DATA/english_ptb_train.train.feats and $DATA/english_ptb_train.validation.feats
 ./partition-examples.py
 
 # Shuffle examples
-grep . data/english_ptb_train.train.feats | ~/dev/common-scripts/shuffle.sh > data/english_ptb_train.train.shuffled.feats
-mv data/english_ptb_train.train.feats data/english_ptb_train.train.unshuffled.feats
-ln -s english_ptb_train.train.shuffled.feats data/english_ptb_train.train.feats
-grep . data/english_ptb_train.validation.feats | ~/dev/common-scripts/shuffle.sh > data/english_ptb_train.validation.shuffled.feats
-mv data/english_ptb_train.validation.feats data/english_ptb_train.validation.unshuffled.feats
-ln -s english_ptb_train.validation.shuffled.feats data/english_ptb_train.validation.feats
+grep . $DATA/english_ptb_train.train.feats | ~/dev/common-scripts/shuffle.sh > $DATA/english_ptb_train.train.shuffled.feats
+mv $DATA/english_ptb_train.train.feats $DATA/english_ptb_train.train.unshuffled.feats
+ln -s english_ptb_train.train.shuffled.feats $DATA/english_ptb_train.train.feats
+grep . $DATA/english_ptb_train.validation.feats | ~/dev/common-scripts/shuffle.sh > $DATA/english_ptb_train.validation.shuffled.feats
+mv $DATA/english_ptb_train.validation.feats $DATA/english_ptb_train.validation.unshuffled.feats
+ln -s english_ptb_train.validation.shuffled.feats $DATA/english_ptb_train.validation.feats

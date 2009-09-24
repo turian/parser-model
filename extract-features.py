@@ -7,10 +7,10 @@ common.options.reparse(HYPERPARAMETERS)
 from common.file import myopen
 import string
 
-import common.featuremap
+import common.deprecated.featuremap
 
-labelmap = common.featuremap.get(name="labels")
-featuremap = common.featuremap.get(name="features")
+labelmap = common.deprecated.featuremap.get(name="labels")
+featuremap = common.deprecated.featuremap.get(name="features")
 
 #from collection import defaultdict
 #cnt = defaultdict(int)
