@@ -17,7 +17,7 @@ import math
 import random
 
 #from common import movingaverage
-import movingaverage
+import common.movingaverage
 
 random.seed(HYPERPARAMETERS["random seed"])
 N.random.seed(HYPERPARAMETERS["random seed"])
@@ -79,8 +79,8 @@ def validate():
 
     return N.mean(acc), N.std(acc)
 
-mvgavg_accuracy = movingaverage.MovingAverage()
-mvgavg_loss = movingaverage.MovingAverage()
+mvgavg_accuracy = common.movingaverage.MovingAverage()
+mvgavg_loss = common.movingaverage.MovingAverage()
 cnt = 0
 #if HLAYERS == 2:
 #    state.save((w1, b1, wh, bh, w2, b2), rundir, best_validation_accuracy, best_validation_at)
