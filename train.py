@@ -148,7 +148,7 @@ for (x, y) in examples.get_training_example():
             sys.stderr.write("Have not beaten best validation accuracy for a while. Terminating training...\n")
             sys.stderr.write(stats() + "\n")
             break
-    if cnt % 1000 == 0:
+    if cnt % 10000 == 0:
         sys.stderr.write("After %d training examples, training accuracy %s\n" % (cnt, mvgavg_accuracy))
         sys.stderr.write("After %d training examples, training loss %s\n" % (cnt, mvgavg_loss))
         sys.stderr.write(stats() + "\n")
