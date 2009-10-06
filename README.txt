@@ -12,8 +12,11 @@ history-based parsers.
 Little of this code is parser specific, it is mainly generic neural network
 code.
 
-desr.txt is a notepad of my results while experimenting with the DeSR
-parser.
+    desr.txt is a notepad of my results while experimenting with the
+    DeSR parser.
+
+    hyperparameters.features.yaml and features/ are used for transforming the
+    features, to include Brown clusters of word embeddings.
 
 
 This code relies upon Theano (http://pylearn.org/theano/)
