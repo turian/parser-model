@@ -1,6 +1,19 @@
-20090923-rerun-label-bias-comparison.18.--hidden_layers=1_--hidden_dimensions=1000_--no_locally_normalize_--learning_rate=0_00032:122500000 96.09 (validation per-decision accuracy)
-20090923-rerun-label-bias-comparison.14.--hidden_layers=1_--hidden_dimensions=1000_--locally_normalize_--learning_rate=0_0001:224000000 95.99 (validation per-decision accuracy)
 
+20090923-rerun-label-bias-comparison.18.--hidden_layers=1_--hidden_dimensions=1000_--no_locally_normalize_--learning_rate=0_00032
+    [this run is from CoNLL07 data]
+    Model from 122500000 training steps
+    Validation per-decision accuracy: 96.09
+    Test beam=1:
+        LAS: 86.49 % (4327/5003)
+        UAS: 87.57 % (4381/5003)
+
+20090923-rerun-label-bias-comparison.14.--hidden_layers=1_--hidden_dimensions=1000_--locally_normalize_--learning_rate=0_0001
+    [this run is from CoNLL07 data]
+    Model from 224000000 training steps
+    Validation per-decision accuracy: 95.99
+    Test beam=1:
+        LAS: 86.67 % (4336/5003)
+        UAS: 87.79 % (4392/5003)
 
 Make a model:
     cd modeldir/
@@ -13,11 +26,15 @@ Run a model:
     time ~/utils/src/desr.svn/src/desr -m english_ptb.MLP -b 1 ~/data/conll2007/english_ptb_test.conll > english_ptb_test.MLP.beam-1.conll
 
     # Run with beam width 10
-    time ~/utils/src/desr.svn/src/desr -m english_ptb.MLP -b 10 ~/data/conll2007/english_ptb_test.conll > english_ptb_test.MLP.beam-10.conll
+    time ~/utils/src/desr.svn/src/desr -b 10 -m english_ptb.MLP ~/data/conll2007/english_ptb_test.conll > english_ptb_test.MLP.beam-10.conll
 
 
 Ideas:
+    * Train on entire PTB   
+        * Repartition data for validation
     * Normalized vs. unnormalized?
+    * VerbCount=true
+    * Try wider hidden layer
     * Try greedy completion search.
         * At very least, compare beam 1 output to beam 1000 output. See what
         percent of sentences match. If a high percentage do, then it means
