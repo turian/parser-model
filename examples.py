@@ -6,7 +6,7 @@ import string, sys
 import common.file
 import common.hyperparameters
 import common.scipysparse as sparse
-import common.featuremap
+import common.deprecated.featuremap
 from common.stats import stats
 from vocabulary import *
 

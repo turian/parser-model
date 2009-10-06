@@ -1,7 +1,7 @@
 dbidispatch ./train.py \
     '--hidden_layers={{1,2}}' \
     '--hidden_dimensions={{320,1000,2000}}' \
-    '--no_locally_normalize' \
+    '{{--locally_normalize,--no_locally_normalize}}' \
     '--learning_rate={{0.01,0.0032,0.001,0.00032,0.0001}}'
 
-#    '{{--locally_normalize,--no_locally_normalize}}' \
+#    '--no_locally_normalize' \

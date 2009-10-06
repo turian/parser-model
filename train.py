@@ -17,7 +17,7 @@ import math
 import random
 
 #from common import movingaverage
-import movingaverage
+import common.movingaverage
 
 random.seed(HYPERPARAMETERS["random seed"])
 N.random.seed(HYPERPARAMETERS["random seed"])
@@ -79,8 +79,8 @@ def validate():
 
     return N.mean(acc), N.std(acc)
 
-mvgavg_accuracy = movingaverage.MovingAverage()
-mvgavg_loss = movingaverage.MovingAverage()
+mvgavg_accuracy = common.movingaverage.MovingAverage()
+mvgavg_loss = common.movingaverage.MovingAverage()
 cnt = 0
 #if HLAYERS == 2:
 #    state.save((w1, b1, wh, bh, w2, b2), rundir, best_validation_accuracy, best_validation_at)
@@ -148,7 +148,7 @@ for (x, y) in examples.get_training_example():
             sys.stderr.write("Have not beaten best validation accuracy for a while. Terminating training...\n")
             sys.stderr.write(stats() + "\n")
             break
-    if cnt % 1000 == 0:
+    if cnt % 10000 == 0:
         sys.stderr.write("After %d training examples, training accuracy %s\n" % (cnt, mvgavg_accuracy))
         sys.stderr.write("After %d training examples, training loss %s\n" % (cnt, mvgavg_loss))
         sys.stderr.write(stats() + "\n")
