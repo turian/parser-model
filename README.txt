@@ -7,10 +7,13 @@ Parser model
 A neural network with a sparse input, for predicting decisions of a natural
 language syntax parser.
 
-Designed to make decisions in Giuseppe Attardi's DESR parser, but usable in other
+Designed to make decisions in Giuseppe Attardi's DeSR parser, but usable in other
 history-based parsers.
 Little of this code is parser specific, it is mainly generic neural network
 code.
+
+desr.txt is a notepad of my results while experimenting with the DeSR
+parser.
 
 
 This code relies upon Theano (http://pylearn.org/theano/)

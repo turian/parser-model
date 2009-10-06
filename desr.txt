@@ -1,0 +1,27 @@
+20090923-rerun-label-bias-comparison.18.--hidden_layers=1_--hidden_dimensions=1000_--no_locally_normalize_--learning_rate=0_00032:122500000 96.09 (validation per-decision accuracy)
+20090923-rerun-label-bias-comparison.14.--hidden_layers=1_--hidden_dimensions=1000_--locally_normalize_--learning_rate=0_0001:224000000 95.99 (validation per-decision accuracy)
+
+
+Make a model:
+    cd modeldir/
+    # Make sure that fmap.features.pkl.gz exists
+    cp ~/dev/python/parser-model/models/english_ptb.MLP.head english_ptb.MLP
+    ~/utils/src/desr.svn/script/dumpPyModel.py best-model.pkl >> english_ptb.MLP
+
+Run a model:
+    # Run with beam search 1
+    time ~/utils/src/desr.svn/src/desr -m english_ptb.MLP -b 1 ~/data/conll2007/english_ptb_test.conll > english_ptb_test.MLP.beam-1.conll
+
+    # Run with beam width 10
+    time ~/utils/src/desr.svn/src/desr -m english_ptb.MLP -b 10 ~/data/conll2007/english_ptb_test.conll > english_ptb_test.MLP.beam-10.conll
+
+
+Ideas:
+    * Normalized vs. unnormalized?
+    * Try greedy completion search.
+        * At very least, compare beam 1 output to beam 1000 output. See what
+        percent of sentences match. If a high percentage do, then it means
+        that greedy search is pretty good under this model.
+    * Use parser during training as crossvalidation criterion (LAS as
+    validation criterion, not per-decision accuracy)
+    * Train parser to recover from its own errors
