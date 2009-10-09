@@ -2,6 +2,13 @@ original examples file: ../data/20090923/english_ptb_train.feats
 train examples file: ../data/20090923/english_ptb_train.train.feats
 validation examples file: ../data/20090923/english_ptb_train.validation.feats
 
+# When a feature value is given, divide it by this value. (All other
+# features, the ones without values given, will have value 1.)
+# TODO: This is done during training, but maybe should be
+# done during feature extraction and this feature should be in
+# features/hyperparameters.features.yaml
+divide feature values by: 1.
+
 hidden layers: 2
 hidden dimensions: 100
 learning rate: 0.1

@@ -15,8 +15,8 @@ code.
     desr.txt is a notepad of my results while experimenting with the
     DeSR parser.
 
-    hyperparameters.features.yaml and features/ are used for transforming the
-    features, to include Brown clusters of word embeddings.
+    features/ are used for transforming the features, to include Brown
+    clusters or word embeddings. See features/README.txt
 
 
 This code relies upon Theano (http://pylearn.org/theano/)

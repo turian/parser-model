@@ -1,0 +1,16 @@
+brown file: /u/turian/dev/brown-clusters/brown-rcv1.unclean.tokenized-CoNLL03.txt-c1000-freq1-v3.txt
+
+brown prefix lengths: [4, 6, 10, 20]
+#brown prefix lengths: [4, 6, 10, 20, -1]
+
+########
+
+embeddings file: /u/turian/dev/python/language-model/embeddings-20090923-rcv1.unclean.CoNLL03-tokenize.case-intact.LEARNING_RATE=0_0000000001_--EMBEDDING_LEARNING_RATE=0_0000032.model-440000000.txt
+
+embeddings unknown word: '*UNKNOWN*'
+embeddings length: 50
+
+########
+
+# Keep words after adding new word representation features?
+keep words: False
