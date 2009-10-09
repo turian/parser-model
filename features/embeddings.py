@@ -36,7 +36,7 @@ for l in sys.stdin:
             trainw = f[2:]
             reprw = wordmapping.train_to_representation(trainw, embeddings)
             if reprw in embeddings:
-                continue
+                pass
             elif HYPERPARAMETERS["embeddings unknown word"] in embeddings:
                 reprw = HYPERPARAMETERS["embeddings unknown word"]
                 missingcount[trainw] += 1
