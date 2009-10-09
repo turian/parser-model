@@ -20,7 +20,13 @@ for l in myopen(HYPERPARAMETERS["original examples file"]):
     l = i[0]
     feats = i[1:]
     labelmap.id(l, can_add=True)
-    for f in feats:
+    for fline in feats:
+        flst = string.split(fline, sep=":")
+        if len(flst) == 1:
+            f, v = flst[0], 1.
+        elif len(flst) == 2:
+            f, v = flst[0], float(flst[1])/HYPERPARAMETERS["divide feature values by"]
+        else: assert 0
         featuremap.id(f, can_add=True)
 #        cnt[f] += 1
 

@@ -11,12 +11,19 @@ from common.stats import stats
 from vocabulary import *
 
 def _example_from_string(l):
+    HYPERPARAMETERS = common.hyperparameters.read("attardi07_english_ptb")
     i = string.split(l)
     l = i[0]
     feats = i[1:]
     x = sparse.lil_matrix((1, featuremap.len))
-    for f in feats:
-        x[0, featuremap.id(f)] = 1.
+    for fline in feats:
+        flst = string.split(fline, sep=":")
+        if len(flst) == 1:
+            f, v = flst[0], 1.
+        elif len(flst) == 2:
+            f, v = flst[0], float(flst[1])/HYPERPARAMETERS["divide feature values by"]
+        else: assert 0
+        x[0, featuremap.id(f)] = v
     x = sparse.csr_matrix(x)
     y = labelmap.id(l)
     return x, y

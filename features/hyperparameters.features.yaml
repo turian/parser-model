@@ -1,7 +1,7 @@
 brown file: /u/turian/dev/brown-clusters/brown-rcv1.unclean.tokenized-CoNLL03.txt-c1000-freq1-v3.txt
 
-brown prefix lengths: [4, 6, 10, 20]
-#brown prefix lengths: [4, 6, 10, 20, -1]
+#brown prefix lengths: [4, 6, 10, 20]
+brown prefix lengths: [4, 6, 10, 20, -1]
 
 ########
 
@@ -13,4 +13,4 @@ embeddings length: 50
 ########
 
 # Keep words after adding new word representation features?
-keep words: False
+keep words: True
