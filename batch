@@ -1,8 +1,11 @@
 dbidispatch ./train.py \
-    '--hidden_layers={{1,2}}' \
-    '--divide_feature_values_by={{1.,3.2,10.}}' \
-    '--hidden_dimensions={{320,1000,2000}}' \
+    '--hidden_layers=1' \
+    '--divide_feature_values_by={{32.}}' \
+    '--hidden_dimensions={{320,1000}}' \
     '{{--locally_normalize,--no_locally_normalize}}' \
-    '--learning_rate={{0.0032,0.001,0.00032}}'
+    '--learning_rate={{0.01,0.0032,0.001,0.00032}}'
+#    '--hidden_layers={{1,2}}' \
+#    '--hidden_dimensions={{320,1000,2000}}' \
+#    '--divide_feature_values_by={{1.,3.2,10.}}' \
 
 #    '--no_locally_normalize' \

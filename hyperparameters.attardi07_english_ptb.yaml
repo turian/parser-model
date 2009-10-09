@@ -1,6 +1,5 @@
 original examples file: ../data/r235/embeddings-20090923-rcv1.unclean.CoNLL03-tokenize.case-intact.LEARNING_RATE=0_0000000001_--EMBEDDING_LEARNING_RATE=0_0000032.model-440000000/english_ptb_train.feats.gz
-#train examples file: ../data/r235/embeddings-20090923-rcv1.unclean.CoNLL03-tokenize.case-intact.LEARNING_RATE=0_0000000001_--EMBEDDING_LEARNING_RATE=0_0000032.model-440000000/english_ptb_train.train.feats.gz
-train examples file: ../data/r235/embeddings-20090923-rcv1.unclean.CoNLL03-tokenize.case-intact.LEARNING_RATE=0_0000000001_--EMBEDDING_LEARNING_RATE=0_0000032.model-440000000/english_ptb_train.validation.feats.gz
+train examples file: ../data/r235/embeddings-20090923-rcv1.unclean.CoNLL03-tokenize.case-intact.LEARNING_RATE=0_0000000001_--EMBEDDING_LEARNING_RATE=0_0000032.model-440000000/english_ptb_train.train.feats.gz
 validation examples file: ../data/r235/embeddings-20090923-rcv1.unclean.CoNLL03-tokenize.case-intact.LEARNING_RATE=0_0000000001_--EMBEDDING_LEARNING_RATE=0_0000032.model-440000000/english_ptb_train.validation.feats.gz
 
 # When a feature value is given, divide it by this value. (All other
